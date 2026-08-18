@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia do Eleitor Consciente — Eleições 2026 · Minas Gerais</title>
+  <meta property="og:title" content="Guia do Eleitor Consciente — Eleições 2026" />
+  <meta property="og:description" content="Pesquise candidatos por critérios objetivos. Gratuito, sem viés político. Foco: Minas Gerais." />
+  <meta property="og:type" content="website" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cor-fundo:#f0f4f8; --cor-card:#ffffff; --cor-primaria:#1a56a0;
+      --cor-primaria-esc:#0f3a72; --cor-acento:#2e8b57; --cor-alerta:#c0392b;
+      --cor-aviso:#d4a017; --cor-borda:#d1dce8; --cor-texto:#1a2332;
+      --cor-texto-suave:#4a5568; --cor-pesquisa:#7c3aed;
+      --sombra-card:0 2px 12px rgba(26,86,160,0.10); --raio:10px;
+      --fonte:'Segoe UI',Arial,sans-serif;
+    }
+    body{font-family:var(--fonte);background:var(--cor-fundo);color:var(--cor-texto);min-height:100vh;padding-bottom:60px;}
+    header{background:linear-gradient(135deg,var(--cor-primaria) 0%,var(--cor-primaria-esc) 100%);color:#fff;padding:28px 24px 22px;text-align:center;}
+    header h1{font-size:clamp(1.3rem,4vw,2rem);font-weight:700;letter-spacing:-0.3px;}
+    header p.subtitulo{font-size:0.95rem;opacity:0.88;margin-top:6px;}
+    .container{max-width:1400px;margin:0 auto;padding:0 16px;}
+    .proposito{background:#e8f0fb;border-left:5px solid var(--cor-primaria);border-radius:var(--raio);padding:18px 22px;margin:28px 0 22px;font-size:0.93rem;line-height:1.65;}
+    .proposito strong{color:var(--cor-primaria-esc);}
+    .form-card{background:var(--cor-card);border-radius:var(--raio);box-shadow:var(--sombra-card);padding:28px 28px 24px;margin-bottom:28px;}
+    .form-card h2{font-size:1.1rem;color:var(--cor-primaria-esc);margin-bottom:18px;}
+    .form-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:22px;}
+    .form-group{display:flex;flex-direction:column;gap:6px;}
+    .form-group label{font-size:0.85rem;font-weight:600;color:var(--cor-texto-suave);}
+    .form-group input[type="text"]{padding:10px 14px;border:1.5px solid var(--cor-borda);border-radius:7px;font-size:1rem;width:200px;transition:border-color 0.2s;}
+    .form-group input[type="text"]:focus{outline:none;border-color:var(--cor-primaria);}
+    .criterios-titulo{font-size:0.9rem;font-weight:600;color:var(--cor-texto-suave);margin-bottom:10px;}
+    .criterios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:22px;}
+    .criterio-item{display:flex;align-items:flex-start;gap:10px;background:#f7faff;border:1.5px solid var(--cor-borda);border-radius:8px;padding:10px 14px;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+    .criterio-item:hover{border-color:var(--cor-primaria);background:#eaf1fb;}
+    .criterio-item input[type="checkbox"]{margin-top:2px;accent-color:var(--cor-primaria);width:16px;height:16px;flex-shrink:0;}
+    .criterio-item label{font-size:0.87rem;line-height:1.45;cursor:pointer;}
+    .criterio-item.todos{border-color:var(--cor-primaria);background:#ddeeff;}
+    .botoes-acao{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .btn-buscar{background:var(--cor-primaria);color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.1s;display:flex;align-items:center;gap:8px;}
+    .btn-buscar:hover{background:var(--cor-primaria-esc);}
+    .btn-buscar:active{transform:scale(0.98);}
+    .btn-buscar:disabled{background:#a0b4cc;cursor:not-allowed;}
+    .btn-limpar{background:transparent;color:var(--cor-texto-suave);border:1.5px solid var(--cor-borda);border-radius:8px;padding:12px 20px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:background 0.2s,border-color 0.2s,color 0.2s;display:flex;align-items:center;gap:7px;}
+    .btn-limpar:hover{background:#f8d7da;border-color:var(--cor-alerta);color:var(--cor-alerta);}
+    .btn-atualizar{background:transparent;color:#2e7d32;border:1.5px solid #2e7d32;border-radius:8px;padding:12px 20px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:background 0.2s,color 0.2s;display:flex;align-items:center;gap:7px;}
+    .btn-atualizar:hover{background:#e8f5e9;color:#1b5e20;}
+    .btn-atualizar:disabled{opacity:0.5;cursor:not-allowed;}
+    .atualizacao-status{font-size:0.78rem;color:var(--cor-texto-suave);margin-top:6px;display:flex;align-items:center;gap:6px;}
+    .atualizacao-status .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .atualizacao-status .dot.ok{background:#2e8b57;}
+    .atualizacao-status .dot.erro{background:var(--cor-alerta);}
+    .atualizacao-status .dot.aguardando{background:var(--cor-aviso);}
+    .spinner-overlay{display:none;position:fixed;inset:0;background:rgba(240,244,248,0.75);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+    .spinner-overlay.ativo{display:flex;}
+    .spinner{width:52px;height:52px;border:5px solid var(--cor-borda);border-top-color:var(--cor-primaria);border-radius:50%;animation:girar 0.8s linear infinite;}
+    @keyframes girar{to{transform:rotate(360deg);}}
+    .spinner-texto{font-size:0.95rem;color:var(--cor-primaria-esc);font-weight:600;}
+    .mensagem{border-radius:8px;padding:14px 18px;font-size:0.92rem;margin-bottom:20px;display:none;}
+    .mensagem.erro{background:#fdecea;border-left:4px solid var(--cor-alerta);color:#7b1a14;display:block;}
+    .mensagem.aviso{background:#fff8e1;border-left:4px solid var(--cor-aviso);color:#7a5c00;display:block;}
+    .mensagem.info{background:#e8f0fb;border-left:4px solid var(--cor-primaria);color:var(--cor-primaria-esc);display:block;}
+
+    /* ── PAINEL DA CIDADE — compacto com foto + 2 dados ── */
+    .cidade-painel{
+      display:none;
+      border-radius:var(--raio);
+      box-shadow:var(--sombra-card);
+      margin-bottom:24px;
+      overflow:hidden;
+      border:1.5px solid var(--cor-borda);
+      animation:fadeIn 0.4s ease;
+    }
+    .cidade-painel.visivel{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Foto com overlay e dados sobrepostos */
+    .cidade-hero{
+      position:relative;
+      width:100%;
+      height:180px;
+      background:linear-gradient(135deg,#1a56a0 0%,#0f3a72 100%);
+      overflow:hidden;
+    }
+    .cidade-hero-img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      opacity:0;
+      transition:opacity 0.5s ease;
+    }
+    .cidade-hero-img.carregada{opacity:1;}
+    /* Overlay escuro no rodapé da foto */
+    .cidade-hero-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top,rgba(10,30,60,0.88) 0%,rgba(10,30,60,0.2) 50%,transparent 100%);
+    }
+    /* Nome da cidade sobre a foto */
+    .cidade-hero-info{
+      position:absolute;
+      bottom:0;
+      left:0;
+      right:0;
+      padding:14px 18px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .cidade-hero-nome{
+      color:#fff;
+      font-size:1.35rem;
+      font-weight:700;
+      text-shadow:0 2px 8px rgba(0,0,0,0.5);
+      line-height:1.2;
+    }
+    .cidade-hero-uf{
+      background:rgba(255,255,255,0.18);
+      color:#fff;
+      border-radius:20px;
+      padding:3px 12px;
+      font-size:0.85rem;
+      font-weight:600;
+      backdrop-filter:blur(4px);
+      white-space:nowrap;
+    }
+    /* Faixa de dados abaixo da foto */
+    .cidade-dados-faixa{
+      background:#fff;
+      display:flex;
+      align-items:stretch;
+      border-top:1.5px solid var(--cor-borda);
+    }
+    .cidade-dado{
+      flex:1;
+      padding:12px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+    .cidade-dado + .cidade-dado{
+      border-left:1.5px solid var(--cor-borda);
+    }
+    .cidade-dado-label{
+      font-size:0.7rem;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      color:var(--cor-texto-suave);
+    }
+    .cidade-dado-valor{
+      font-size:0.95rem;
+      font-weight:700;
+      color:var(--cor-primaria-esc);
+      line-height:1.3;
+    }
+    .cidade-dado-valor.nd{
+      color:#9ca3af;
+      font-weight:400;
+      font-style:italic;
+      font-size:0.85rem;
+    }
+    .cidade-dado-sub{
+      font-size:0.68rem;
+      color:var(--cor-texto-suave);
+    }
+    /* Spinner dentro do hero */
+    .cidade-hero-spinner{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .cidade-mini-spinner{width:24px;height:24px;border:3px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:girar 0.7s linear infinite;}
+
+    /* Critérios — sempre visíveis */
+    .criterios-secao{display:block;}
+
+    .estado-aviso{background:#fff3cd;border:1.5px solid var(--cor-aviso);border-radius:var(--raio);padding:16px 20px;margin-bottom:22px;font-size:0.9rem;line-height:1.6;display:none;}
+    .estado-aviso.visivel{display:block;}
+    .estado-aviso strong{color:#7a5c00;}
+    .governabilidade-box{background:linear-gradient(135deg,#1a56a0 0%,#2e8b57 100%);color:#fff;border-radius:var(--raio);padding:18px 24px;margin-bottom:28px;display:none;}
+    .governabilidade-box.visivel{display:block;}
+    .governabilidade-box h3{font-size:1rem;margin-bottom:8px;}
+    .governabilidade-barra-fundo{background:rgba(255,255,255,0.25);border-radius:20px;height:14px;overflow:hidden;margin-bottom:8px;}
+    .governabilidade-barra-fill{background:#fff;height:100%;border-radius:20px;transition:width 0.6s ease;}
+    .governabilidade-texto{font-size:0.88rem;opacity:0.9;}
+    .resultados-secao{margin-bottom:10px;}
+    .resultados-secao h2{font-size:1.15rem;color:var(--cor-primaria-esc);margin-bottom:14px;padding-top:8px;}
+    .legenda-secoes{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:18px;padding:12px 18px;background:var(--cor-card);border-radius:var(--raio);box-shadow:var(--sombra-card);font-size:0.83rem;align-items:center;}
+    .legenda-item{display:flex;align-items:center;gap:7px;}
+    .legenda-dot{width:13px;height:13px;border-radius:3px;flex-shrink:0;}
+    .legenda-dot.criterio{background:var(--cor-primaria);}
+    .legenda-dot.pesquisa{background:var(--cor-pesquisa);}
+    .cargo-painel{background:var(--cor-card);border-radius:var(--raio);box-shadow:var(--sombra-card);margin-bottom:14px;overflow:hidden;transition:opacity 0.3s;}
+    .cargo-painel.bloqueado{opacity:0.45;pointer-events:none;}
+    .cargo-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;background:#f7faff;border-bottom:1.5px solid var(--cor-borda);transition:background 0.2s;}
+    .cargo-header:hover{background:#eaf1fb;}
+    .cargo-header h3{font-size:0.97rem;color:var(--cor-primaria-esc);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .cargo-header .escopo{font-size:0.76rem;background:var(--cor-primaria);color:#fff;border-radius:20px;padding:2px 10px;font-weight:600;}
+    .cargo-header .seta{font-size:1rem;color:var(--cor-primaria);transition:transform 0.3s;}
+    .cargo-header.aberto .seta{transform:rotate(180deg);}
+    .painel-status{font-size:0.74rem;border-radius:20px;padding:2px 10px;font-weight:600;white-space:nowrap;}
+    .painel-status.aguardando{background:#fff3cd;color:#7a5c00;}
+    .painel-status.disponivel{background:#d4edda;color:#155724;}
+    .painel-status.selecionado-status{background:#d4edda;color:#155724;}
+    .cargo-corpo{padding:16px 18px;display:none;}
+    .cargo-corpo.aberto{display:block;}
+    .bloqueio-overlay{display:flex;align-items:center;justify-content:center;padding:32px 20px;text-align:center;flex-direction:column;gap:10px;color:var(--cor-texto-suave);font-size:0.9rem;}
+    .bloqueio-overlay .lock-icon{font-size:2rem;opacity:0.4;}
+    .candidatos-linha{display:flex;flex-direction:row;flex-wrap:nowrap;gap:10px;align-items:stretch;}
+    .candidatos-linha .candidato-card{flex:1 1 0;min-width:155px;}
+    .divisor-grid{flex:0 0 2px;min-width:2px;align-self:stretch;background:repeating-linear-gradient(to bottom,var(--cor-borda) 0px,var(--cor-borda) 6px,transparent 6px,transparent 12px);border-radius:2px;}
+    .candidato-card{border:1.5px solid var(--cor-borda);border-radius:var(--raio);padding:14px;position:relative;transition:box-shadow 0.2s,border-color 0.2s;background:#fff;display:flex;flex-direction:column;}
+    .candidato-card:hover{box-shadow:0 4px 18px rgba(26,86,160,0.15);border-color:var(--cor-primaria);}
+    .candidato-card.selecionado{border-color:var(--cor-acento);box-shadow:0 0 0 3px rgba(46,139,87,0.18);}
+    .candidato-card.alinhado{border-left:4px solid var(--cor-acento);}
+    .candidato-card.parcial{border-left:4px solid var(--cor-aviso);}
+    .candidato-card.oposto{border-left:4px solid var(--cor-alerta);}
+    .candidato-card.tipo-pesquisa{border-top:3px solid var(--cor-pesquisa);}
+    .candidato-rank{position:absolute;top:10px;right:10px;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;}
+    .candidato-rank.rank-criterio{background:var(--cor-primaria);}
+    .candidato-rank.rank-pesquisa{background:var(--cor-pesquisa);}
+    .candidato-nome{font-size:0.9rem;font-weight:700;color:var(--cor-texto);margin-bottom:2px;padding-right:30px;line-height:1.3;}
+    .candidato-partido{font-size:0.75rem;color:var(--cor-texto-suave);margin-bottom:5px;}
+    .pesquisa-badge{display:inline-flex;align-items:center;gap:3px;background:#f3e8ff;color:var(--cor-pesquisa);border-radius:20px;padding:2px 8px;font-size:0.68rem;font-weight:700;margin-bottom:5px;line-height:1.4;word-break:break-word;}
+    .regiao-badge{display:inline-flex;align-items:center;gap:3px;background:#e8f5e9;color:#2e7d32;border-radius:20px;padding:2px 8px;font-size:0.68rem;font-weight:700;margin-bottom:5px;margin-left:3px;}
+    .debutante-badge{display:inline-flex;align-items:center;gap:3px;background:#1b5e20;color:#fff;border-radius:20px;padding:2px 8px;font-size:0.68rem;font-weight:700;margin-bottom:5px;margin-left:3px;}
+    .candidato-score{display:inline-flex;align-items:center;gap:4px;background:#f0f4f8;border-radius:20px;padding:2px 9px;font-size:0.74rem;font-weight:600;color:var(--cor-primaria-esc);margin-bottom:6px;}
+    .alinhamento-badge{display:inline-flex;align-items:center;gap:3px;border-radius:20px;padding:2px 7px;font-size:0.7rem;font-weight:600;margin-bottom:6px;margin-left:3px;}
+    .alinhamento-badge.alinhado{background:#d4edda;color:#155724;}
+    .alinhamento-badge.parcial{background:#fff3cd;color:#856404;}
+    .alinhamento-badge.oposto{background:#f8d7da;color:#721c24;}
+    .alinhamento-badge.neutro{background:#e2e3e5;color:#383d41;}
+    .criterios-lista{list-style:none;margin-bottom:10px;flex:1;}
+    .criterios-lista li{display:flex;align-items:flex-start;gap:6px;font-size:0.75rem;padding:3px 0;border-bottom:1px solid #f0f0f0;line-height:1.35;}
+    .criterios-lista li:last-child{border-bottom:none;}
+    .criterio-status{flex-shrink:0;font-size:0.67rem;font-weight:700;border-radius:3px;padding:1px 5px;min-width:78px;text-align:center;}
+    .criterio-status.aprovado{background:#d4edda;color:#155724;}
+    .criterio-status.reprovado{background:#f8d7da;color:#721c24;}
+    .criterio-status.desconhecido{background:#e2e3e5;color:#383d41;}
+    .criterio-fonte{font-size:0.65rem;color:var(--cor-texto-suave);margin-top:1px;}
+    .criterio-fonte a{color:var(--cor-primaria);text-decoration:none;}
+    .criterio-fonte a:hover{text-decoration:underline;}
+    .btn-selecionar{width:100%;padding:7px;border:2px solid var(--cor-primaria);border-radius:6px;background:transparent;color:var(--cor-primaria);font-size:0.78rem;font-weight:700;cursor:pointer;transition:background 0.2s,color 0.2s;margin-top:auto;}
+    .btn-selecionar:hover{background:var(--cor-primaria);color:#fff;}
+    .btn-selecionar.selecionado-btn{background:var(--cor-acento);border-color:var(--cor-acento);color:#fff;}
+    .cors-aviso{background:#fff8e1;border:1.5px solid var(--cor-aviso);border-radius:var(--raio);padding:18px 22px;margin-bottom:22px;font-size:0.88rem;line-height:1.6;display:none;}
+    .cors-aviso.visivel{display:block;}
+    .cors-aviso h4{color:#7a5c00;margin-bottom:8px;}
+    .cors-aviso code{background:#f5f5f5;border-radius:4px;padding:2px 6px;font-size:0.82rem;display:block;margin:8px 0;word-break:break-all;}
+    .disclaimer{background:#f7faff;border:1px solid var(--cor-borda);border-radius:var(--raio);padding:14px 20px;font-size:0.8rem;color:var(--cor-texto-suave);line-height:1.6;margin-top:32px;}
+    .disclaimer strong{color:var(--cor-texto);}
+    .progresso-cedula{background:var(--cor-card);border-radius:var(--raio);box-shadow:var(--sombra-card);padding:14px 20px;margin-bottom:18px;display:none;}
+    .progresso-cedula.visivel{display:block;}
+    .progresso-cedula h4{font-size:0.85rem;color:var(--cor-primaria-esc);margin-bottom:10px;}
+    .progresso-steps{display:flex;gap:6px;flex-wrap:wrap;}
+    .progresso-step{flex:1;min-width:80px;text-align:center;padding:6px 4px;border-radius:7px;font-size:0.72rem;font-weight:600;border:1.5px solid var(--cor-borda);color:var(--cor-texto-suave);background:#f7faff;transition:all 0.3s;}
+    .progresso-step.ativo{border-color:var(--cor-primaria);background:#e8f0fb;color:var(--cor-primaria-esc);}
+    .progresso-step.concluido{border-color:var(--cor-acento);background:#d4edda;color:#155724;}
+    @media(max-width:1100px){.candidatos-linha{flex-wrap:wrap;}.candidatos-linha .candidato-card{flex:1 1 200px;}.divisor-grid{display:none;}}
+    @media(max-width:600px){.candidatos-linha{flex-direction:column;}.candidatos-linha .candidato-card{flex:1 1 auto;min-width:unset;}.cargo-corpo{padding:12px;}.botoes-acao{flex-direction:column;align-items:stretch;}.btn-buscar,.btn-limpar,.btn-atualizar{justify-content:center;}.cidade-dados-faixa{flex-direction:column;}.cidade-dado+.cidade-dado{border-left:none;border-top:1.5px solid var(--cor-borda);}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Guia do Eleitor Consciente</h1>
+  <p class="subtitulo">Eleições Gerais Brasil 2026 — 1.º Turno · Foco: Minas Gerais</p>
+</header>
+
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="spinner"></div>
+  <div class="spinner-texto" id="spinnerTexto">Consultando dados públicos...</div>
+</div>
+
+<div class="container">
+  <div class="proposito">
+    <strong>O que é esta ferramenta?</strong><br>
+    Esta ferramenta é uma <strong>sugestão de pesquisa</strong> para as Eleições Gerais de 2026 — não constitui
+    recomendação de voto. Informe seu CEP para ver o <strong>perfil da sua cidade</strong>,
+    selecione os critérios e receba <strong>5 candidatos por cargo</strong>: os <strong>3 melhor pontuados nos seus critérios</strong> (azul)
+    e os <strong>2 mais bem posicionados nas pesquisas</strong> (roxo).<br><br>
+    Os cargos são apresentados <strong>sequencialmente</strong>: escolha um candidato para desbloquear o próximo cargo.
+  </div>
+
+  <div class="form-card">
+    <h2>Configurar minha pesquisa</h2>
+
+    <!-- Botão Atualizar Dados -->
+    <div style="margin-bottom:20px;padding:14px 18px;background:#f0faf0;border:1.5px solid #a5d6a7;border-radius:var(--raio);">
+      <div style="font-size:0.85rem;font-weight:600;color:#2e7d32;margin-bottom:8px;">&#128260; Verificação de dados no TSE</div>
+      <div style="font-size:0.82rem;color:var(--cor-texto-suave);margin-bottom:10px;line-height:1.5;">
+        Clique para verificar o status atual das candidaturas registradas no TSE.
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <button class="btn-atualizar" id="btnAtualizar" onclick="atualizarDados()">
+          <span>&#128260;</span> Atualizar Dados do TSE
+        </button>
+        <div class="atualizacao-status" id="statusAtualizacao">
+          <div class="dot aguardando"></div>
+          <span>Dados locais — última verificação: nunca</span>
+        </div>
+      </div>
+      <div id="resultadoAtualizacao" style="margin-top:10px;font-size:0.8rem;display:none;"></div>
+    </div>
+
+    <!-- Campo CEP -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="campoCep">Seu CEP</label>
+        <input type="text" id="campoCep" placeholder="00000-000" maxlength="9" aria-label="Digite seu CEP" />
+      </div>
+      <div class="form-group" style="justify-content:flex-end;">
+        <div class="botoes-acao">
+          <button class="btn-buscar" id="btnBuscar" onclick="iniciarBusca()">
+            <span>&#128269;</span> Buscar Candidatos
+          </button>
+          <button class="btn-limpar" id="btnLimpar" onclick="limparTudo()">
+            <span>&#10005;</span> Limpar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAINEL DA CIDADE — foto + habitantes + PIB -->
+    <div class="cidade-painel" id="cidadePainel">
+      <div class="cidade-hero" id="cidadeHero">
+        <!-- Spinner enquanto carrega -->
+        <div class="cidade-hero-spinner" id="cidadeSpinner">
+          <div class="cidade-mini-spinner"></div>
+        </div>
+        <!-- Foto via Unsplash -->
+        <img class="cidade-hero-img" id="cidadeImg" src="" alt=""
+          onload="this.classList.add('carregada');document.getElementById('cidadeSpinner').style.display='none';"
+          onerror="document.getElementById('cidadeSpinner').style.display='none';" />
+        <div class="cidade-hero-overlay"></div>
+        <div class="cidade-hero-info">
+          <div class="cidade-hero-nome" id="cidadeNome"></div>
+          <div class="cidade-hero-uf" id="cidadeUf"></div>
+        </div>
+      </div>
+      <!-- Faixa de dados: habitantes + PIB -->
+      <div class="cidade-dados-faixa" id="cidadeDadosFaixa" style="display:none;">
+        <div class="cidade-dado">
+          <div class="cidade-dado-label">&#128101; Habitantes</div>
+          <div class="cidade-dado-valor" id="cidadePopulacao">—</div>
+          <div class="cidade-dado-sub" id="cidadePopulacaoSub"></div>
+        </div>
+        <div class="cidade-dado">
+          <div class="cidade-dado-label">&#128200; PIB Municipal</div>
+          <div class="cidade-dado-valor" id="cidadePib">—</div>
+          <div class="cidade-dado-sub" id="cidadePibSub"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITÉRIOS — sempre visíveis -->
+    <div class="criterios-secao">
+      <div class="criterios-titulo">Selecione os critérios que importam para você:</div>
+      <div class="criterios-grid" id="criteriosGrid"></div>
+    </div>
+  </div>
+
+  <div class="mensagem" id="msgErro"></div>
+  <div class="mensagem" id="msgAviso"></div>
+  <div class="mensagem" id="msgInfo"></div>
+
+  <div class="cors-aviso" id="corsAviso">
+    <h4>&#9888; Limitação de acesso a dados (CORS)</h4>
+    <p>Algumas APIs públicas bloqueiam requisições diretas do navegador. Execute no terminal (requer Node.js):</p>
+    <code>npx cors-anywhere</code>
+    <p>Ou instale a extensão <strong>"CORS Unblock"</strong> no navegador.</p>
+  </div>
+
+  <div class="estado-aviso" id="estadoAviso">
+    <strong>&#9888; Estado fora do escopo atual:</strong> Esta versão cobre os cargos estaduais apenas para
+    <strong>Minas Gerais</strong>. Para o seu estado, os cargos estaduais exibirão os dados de MG como referência.
+    O cargo de <strong>Presidente</strong> é nacional e exibido normalmente para todos os estados.
+  </div>
+
+  <div class="progresso-cedula" id="progressoCedula">
+    <h4>&#128203; Sua cédula — progresso das escolhas</h4>
+    <div class="progresso-steps" id="progressoSteps"></div>
+  </div>
+
+  <div class="governabilidade-box" id="governabilidadeBox">
+    <h3>&#9878; Índice de Governabilidade da sua Cédula</h3>
+    <div class="governabilidade-barra-fundo">
+      <div class="governabilidade-barra-fill" id="govBarraFill" style="width:0%"></div>
+    </div>
+    <div class="governabilidade-texto" id="govTexto">Selecione candidatos para calcular o alinhamento.</div>
+  </div>
+
+  <div class="resultados-secao" id="resultadosSecao" style="display:none;">
+    <h2>Candidatos recomendados para o seu perfil</h2>
+    <div class="legenda-secoes">
+      <strong style="font-size:0.83rem;color:var(--cor-texto-suave);">Legenda:</strong>
+      <div class="legenda-item"><div class="legenda-dot criterio"></div><span>Colunas 1–3: melhor pontuação nos seus critérios</span></div>
+      <div class="legenda-item"><div class="legenda-dot pesquisa"></div><span>Colunas 4–5: melhor posicionados nas pesquisas / mais votados na região</span></div>
+      <div class="legenda-item"><div style="background:#1b5e20;width:13px;height:13px;border-radius:3px;flex-shrink:0;"></div><span>Badge verde-escuro: candidato debutante (primeira candidatura à ALMG)</span></div>
+    </div>
+    <div id="paineisCargos"></div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Aviso Legal:</strong> Esta ferramenta é de caráter exclusivamente informativo e cobre apenas o
+    <strong>1.º turno das Eleições Gerais de 2026</strong>. <strong>Não constitui recomendação de voto.</strong>
+    Foto da cidade: Unsplash (uso livre). Dados populacionais e de PIB: IBGE API (podem estar desatualizados).
+    Dados de pesquisas: PoderData (13/08/2026), Quaest (14/08/2026), Genial/Quaest (28/07/2026).
+    Candidaturas sujeitas a deferimento pelo TSE —
+    consulte <a href="https://www.tse.jus.br/eleicoes/eleicoes-2026" target="_blank" rel="noopener">tse.jus.br</a>.
+    Nenhum dado pessoal é armazenado. Em conformidade com a Lei n.º 9.504/1997.
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const CONFIG={ANO_ELEICAO:2026,TURNO:1,UF_SUPORTADA:"MG",API_VIACEP:"https://viacep.com.br/ws/",API_TSE_BASE:"https://dadosabertos.tse.jus.br/api/3/action/",CORS_PROXY:"",TIMEOUT_MS:12000,TOP_CRITERIOS:3,TOP_PESQUISA:2};
+const ORDEM_CARGOS=["presidente","governador","senador","deputadoFederal","deputadoEstadual"];
+const LABELS_CARGOS={presidente:"Presidente",governador:"Governador",senador:"Senador",deputadoFederal:"Dep. Federal",deputadoEstadual:"Dep. Estadual"};
+const CRITERIOS=[{id:"c1",label:"Ficha Limpa — nunca foi condenado por corrupção"},{id:"c2",label:"Trajetória relevante — experiência proporcional ao cargo"},{id:"c3",label:"Liberdade de expressão — posição favorável"},{id:"c4",label:"Responsabilidade fiscal — histórico de controle de gastos"}];
+
+const REGIOES_MG={"central":{nome:"Região Central",municipios:["belo horizonte","contagem","betim","nova lima","ribeirao das neves","santa luzia","sabara","ibirite","esmeraldas","caete","sete lagoas","conselheiro lafaiete","ouro preto","itabira","curvelo","vespasiano","lagoa santa","pedro leopoldo","brumadinho","igarape","mario campos","mateus leme","florestal","paraopeba","sao jose da lapa","confins","jaboticatubas","taquaracu de minas","raposos","nova uniao","belo vale","bonfim","carmo do cajuru","itaverava","ouro branco","congonhas","mariana","joao monlevade","timoteo","coronel fabriciano","ipatinga"]},"sul":{nome:"Sul de Minas",municipios:["pocos de caldas","pouso alegre","varginha","passos","alfenas","lavras","itajuba","sao sebastiao do paraiso","tres coracoes","guaxupe","tres pontas","sao lourenco","extrema","itamonte","cambuquira","caxambu","lambari","sao tome das letras","baependi","aiuruoca","andradas","monte siao","ouro fino","itapeva","bom repouso","camanducaia","toledo","sapucai-mirim","piranguinho","wenceslau braz","itamogi","guaranesia","muzambinho","monte belo","cabo verde","machado","paraguacu","eloi mendes","campo belo","nepomuceno","boa esperanca","formiga","piumhi","pains","arcos","luz","bom despacho","oliveira","divinopolis","nova serrana","para de minas"]},"triangulo":{nome:"Triângulo Mineiro",municipios:["uberlandia","uberaba","araguari","ituiutaba","frutal","iturama","sacramento","monte alegre de minas","tupaciguara","prata","campina verde","canapolis","capinopolis","centralina","comendador gomes","conceicao das alagoas","delta","fronteira","grupiara","ipiacu","itapagipe","limeira do oeste","monte carmelo","nova ponte","patrocinio","pedrinopolis","perdizes","pirajuba","planura","pratinha","santa juliana","santa vitoria","sao francisco de sales","uniao de minas","verissimo","araxa","ibia","campos altos","rio paranaiba","sao gotardo","carmo do paranaiba","patos de minas","coromandel","abadia dos dourados"]},"norte":{nome:"Norte de Minas",municipios:["montes claros","janauba","januaria","pirapora","bocaiuva","sao francisco","salinas","taiobeiras","brasilia de minas","grao mogol","espinosa","varzea da palma","manga","sao joao da ponte","mirabela","lontra","capitao eneas","francisco sa","glaucilandia","guaraciama","itacambira","josenopolis","juramento","luislandia","mato verde","miravania","montezuma","ninheira","pai pedro","porteirinha","riacho dos machados","rio pardo de minas","rubelita","santo antonio do retiro","sao joao do paraiso","serranopolis de minas","ubai","urucuia","verdelandia","virgelandia"]},"zona_mata":{nome:"Zona da Mata",municipios:["juiz de fora","uba","muriae","vicosa","cataguases","leopoldina","manhuacu","ponte nova","alem paraiba","visconde do rio branco","sao joao nepomuceno","carangola","barbacena","santos dumont","lima duarte","bicas","mar de espanha","rio pomba","palma","recreio","miradouro","mirai","tombos","caparao","alto caparao","alto jequitiba","alto rio doce","arantina","argirita","astolfo dutra","belmiro braga","bias fortes","cajuri","cambuci","chacara","chiador","cipotanea","coimbra","coronel pacheco","descoberto","divinesia","divino","dona euzebia","dores do turvo","ervalia","ewbank da camara","fervedouro","goiana","guarani","guidoval","guiricema","itamarati de minas","jequeri","laranjal","merces","oliveira fortes","orizania","paiva","passa vinte","pedra bonita","pedra do anta","pedra dourada","pequeri","pirauba","pirapetinga","porto firme","presidente bernardes","rio novo","rochedo de minas","rodeiro","santa barbara do monte verde","santa barbara do tugurio","santa rita de ibitipoca","santa rita do jacutinga","santana de cataguases","sao francisco do gloria","sao jose do mantimento","sao pedro dos ferros","sao sebastiao da vargem alegre","senador cortes","silveirania","simao pereira","tabuleiro","tocantins","vieiras"]},"vale_rio_doce":{nome:"Vale do Rio Doce",municipios:["governador valadares","ipatinga","coronel fabriciano","timoteo","caratinga","resplendor","aimores","mantena","guanhaes","conselheiro pena","pecanha","sao joao evangelista","coluna","virgem da lapa","itambacuri","campanario","central de minas","crisolita","divino das laranjeiras","engenheiro caldas","fernandes tourinho","frei inocencio","galileia","goiabeira","goncalves","iapu","imbe de minas","ipaba","ipanema","itabirinha","itanhomi","itueta","jampruca","jose raydan","lajinha","laranjal","leme do prado","mathias lobato","mendes pimentel","nacip raydan","naque","nova belem","nova modica","periquito","pocrane","realeza","rio casca","rio doce","rio vermelho","santa efigenia de minas","santa maria do suacui","sao felix de minas","sao geraldo da piedade","sao geraldo do baixio","sao joao do manteninha","sao joao do oriente","sao jose da safira","sao jose do divino","sao jose do jacuri","sao pedro do suacui","sao sebastiao do anta","sardoa","sobralia","taparuba","tarumirim","tumiritinga","virgolandia"]},"jequitinhonha":{nome:"Jequitinhonha / Mucuri",municipios:["teofilo otoni","almenara","aracuai","capelinha","diamantina","itamarandiba","jequitinhonha","medina","nanuque","novo cruzeiro","pedra azul","turmalina","aguas vermelhas","angelandia","aricanduva","bandeira","berilo","bertopolis","botumirim","cachoeira de pajeu","carai","carlos chagas","chapada do norte","comercinho","coronel murta","crisolita","divisopolis","felisburgo","felixlandia","francisco badaro","fronteira dos vales","grao mogol","itaipe","itinga","joaima","jose goncalves de minas","ladainha","leme do prado","mata verde","matias cardoso","minas novas","monte formoso","montezuma","ninheira","novorizonte","ouro verde de minas","padre paraiso","palmopolis","pavao","ponto dos volantes","rio do prado","rubim","salto da divisa","santa cruz de salinas","santa helena de minas","santa maria do salto","santo antonio do jacinto","sao joao do paraiso","umburatiba"]},"noroeste":{nome:"Noroeste de Minas",municipios:["unai","paracatu","joao pinheiro","buritis","arinos","bonfinopolis de minas","vazante","brasilandia de minas","guarda-mor","lagoa grande","cabeceira grande","chapada gaucha","dom bosco","formoso","natalandia","riachinho","sao romao","uruana de minas","varjao de minas","veredas"]},"centro_oeste":{nome:"Centro-Oeste de Minas",municipios:["divinopolis","itauna","para de minas","formiga","nova serrana","bom despacho","oliveira","campo belo","arcos","lagoa da prata","santo antonio do monte","piumhi","abaete","bambui","carmo do cajuru","cedro do abaete","corrego danta","dores do indaia","estrela do indaia","igaratinga","leandro ferreira","luz","martinho campos","morada nova de minas","paineiras","perdigao","quartel geral","sao jose da varginha","tiros","itapecerica","pitangui"]},"alto_paranaiba":{nome:"Alto Paranaíba",municipios:["patos de minas","araxa","patrocinio","carmo do paranaiba","sao gotardo","rio paranaiba","sacramento","monte carmelo","coromandel","ibia","abadia dos dourados","arapua","campos altos","guimarania","lagamar","lagoa formosa","matutina","presidente olegario","santa rosa da serra","sao roque de minas","tiros","varjao de minas","vazante"]}};
+
+function normalizar(str){if(!str)return"";return str.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();}
+function resolverRegiao(municipio){const mNorm=normalizar(municipio);for(const[chave,regiao]of Object.entries(REGIOES_MG)){if(regiao.municipios.some(m=>normalizar(m)===mNorm))return chave;}for(const[chave,regiao]of Object.entries(REGIOES_MG)){if(regiao.municipios.some(m=>mNorm.includes(normalizar(m))||normalizar(m).includes(mNorm)))return chave;}return"_geral";}
+
+const DEP_ESTADUAL_REGIOES={"central":{pesquisa:["deMG_engler","deMG_tramonte"],candidatos:[{id:"deMG_engler",nome:"Bruno Engler",partido:"PL",coalicao:"OPO",uf:"MG",regioes:["central"],pesquisa_pct:"367.031 votos — mais votado da Região Central (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (2019–2026), mais votado do estado em 2022 com 637.412 votos.",fonte:"https://www.poder360.com.br/brasil/saiba-quem-sao-os-deputados-estaduais-eleitos-por-mg-em-2022/"},c3:{status:"desconhecido",justificativa:"Posições sobre regulação de plataformas em debate; sem posição formal verificada.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_tramonte",nome:"Mauro Tramonte",partido:"REPUBLICANOS",coalicao:"OPO",uf:"MG",regioes:["central"],pesquisa_pct:"2.º mais votado — Região Central (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, apresentador de TV, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_beatriz",nome:"Beatriz Cerqueira",partido:"PT",coalicao:"GOV",uf:"MG",regioes:["central"],pesquisa_pct:"Eleita em 2022 — base na Região Central",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG, ex-vereadora em BH, liderança do PT na ALMG.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_bella",nome:"Bella Gonçalves",partido:"PSOL",coalicao:"GOV",uf:"MG",regioes:["central"],pesquisa_pct:"Eleita em 2022 — base em BH",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG, ex-vereadora em BH.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"reprovado",justificativa:"PSOL defende expansão de gastos sociais sem fonte de custeio clara.",fonte:"https://www.almg.gov.br/"}}}]},"sul":{pesquisa:["deMG_cassio","deMG_neilando"],candidatos:[{id:"deMG_cassio",nome:"Cassio Soares",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["sul"],pesquisa_pct:"94.457 votos — mais votado do Sul de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (4.º mandato), base eleitoral consolidada no Sul de Minas.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_neilando",nome:"Neilando Pimenta",partido:"PSB",coalicao:"GOV",uf:"MG",regioes:["sul"],pesquisa_pct:"2.º mais votado — Sul de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_lohanna",nome:"Lohanna",partido:"PV",coalicao:"GOV",uf:"MG",regioes:["sul"],pesquisa_pct:"Eleita em 2022 — base no Sul de Minas",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG, ativista ambiental e de direitos humanos.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_zeguilherme",nome:"Zé Guilherme",partido:"PP",coalicao:"GOV",uf:"MG",regioes:["sul"],pesquisa_pct:"Eleito em 2022 — base no Sul de Minas",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}}]},"triangulo":{pesquisa:["deMG_raul","deMG_fabio"],candidatos:[{id:"deMG_raul",nome:"Raul Belém",partido:"CIDADANIA",coalicao:"CTR",uf:"MG",regioes:["triangulo"],pesquisa_pct:"63.973 votos — mais votado do Triângulo Mineiro (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (2.º mandato), base eleitoral consolidada no Triângulo Mineiro.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_fabio",nome:"Fábio Avelar",partido:"AVANTE",coalicao:"GOV",uf:"MG",regioes:["triangulo","centro_oeste"],pesquisa_pct:"73.896 votos — mais votado do Centro-Oeste (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (3.º mandato), base eleitoral no Triângulo e Centro-Oeste.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_tito",nome:"Tito Torres",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["triangulo"],pesquisa_pct:"Eleito em 2022 — base no Triângulo Mineiro",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_thiago",nome:"Thiago Cota",partido:"PDT",coalicao:"GOV",uf:"MG",regioes:["triangulo"],pesquisa_pct:"Eleito em 2022 — base no Triângulo Mineiro",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}}]},"norte":{pesquisa:["deMG_tadeuzinho","deMG_noraldino"],candidatos:[{id:"deMG_tadeuzinho",nome:"Tadeuzinho",partido:"MDB",coalicao:"GOV",uf:"MG",regioes:["norte"],pesquisa_pct:"89.229 votos — mais votado do Norte de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (4.º mandato), base eleitoral consolidada no Norte de Minas.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_noraldino",nome:"Noraldino Júnior",partido:"PSC",coalicao:"OPO",uf:"MG",regioes:["norte"],pesquisa_pct:"2.º mais votado — Norte de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_gustavo_norte",nome:"Gustavo Valadares",partido:"PMN",coalicao:"CTR",uf:"MG",regioes:["norte"],pesquisa_pct:"Eleito em 2022 — base no Norte de Minas",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_enes",nome:"Enes Cândido",partido:"PMN",coalicao:"CTR",uf:"MG",regioes:["norte","vale_rio_doce"],pesquisa_pct:"59.967 votos — mais votado do Vale do Rio Doce (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (1.º mandato), mais votado do Vale do Rio Doce em 2022.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}}]},"zona_mata":{pesquisa:["deMG_wilson_batista","deMG_christiano"],candidatos:[{id:"deMG_wilson_batista",nome:"Dr. Wilson Batista",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["zona_mata"],pesquisa_pct:"60.385 votos — mais votado da Zona da Mata (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (4.º mandato), médico, base eleitoral consolidada na Zona da Mata.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_christiano",nome:"Del. Christiano Xavier",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["zona_mata"],pesquisa_pct:"2.º mais votado — Zona da Mata (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, ex-delegado de polícia, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_macae",nome:"Macaé Evaristo",partido:"PT",coalicao:"GOV",uf:"MG",regioes:["zona_mata"],pesquisa_pct:"Eleita em 2022 — base na Zona da Mata",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG, ex-secretária de Assistência Social de BH.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_joao_xavier",nome:"João Vitor Xavier",partido:"CIDADANIA",coalicao:"CTR",uf:"MG",regioes:["zona_mata"],pesquisa_pct:"Eleito em 2022 — base na Zona da Mata",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}}]},"vale_rio_doce":{pesquisa:["deMG_enes","deMG_arlen"],candidatos:[{id:"deMG_enes",nome:"Enes Cândido",partido:"PMN",coalicao:"CTR",uf:"MG",regioes:["vale_rio_doce","norte"],pesquisa_pct:"59.967 votos — mais votado do Vale do Rio Doce (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (1.º mandato), mais votado do Vale do Rio Doce em 2022.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_arlen",nome:"Arlen Santiago",partido:"AVANTE",coalicao:"GOV",uf:"MG",regioes:["vale_rio_doce"],pesquisa_pct:"2.º mais votado — Vale do Rio Doce (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_oscar",nome:"Oscar Teixeira",partido:"PP",coalicao:"GOV",uf:"MG",regioes:["vale_rio_doce"],pesquisa_pct:"Eleito em 2022 — base no Vale do Rio Doce",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_adriano",nome:"Adriano Alvarenga",partido:"PP",coalicao:"GOV",uf:"MG",regioes:["vale_rio_doce"],pesquisa_pct:"Eleito em 2022 — base no Vale do Rio Doce",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}}]},"jequitinhonha":{pesquisa:["deMG_jean","deMG_marquinho"],candidatos:[{id:"deMG_jean",nome:"Dr. Jean Freire",partido:"PT",coalicao:"GOV",uf:"MG",regioes:["jequitinhonha"],pesquisa_pct:"66.555 votos — mais votado do Jequitinhonha/Mucuri (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (3.º mandato), médico, base eleitoral consolidada no Jequitinhonha/Mucuri.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_marquinho",nome:"Marquinho Lemos",partido:"PT",coalicao:"GOV",uf:"MG",regioes:["jequitinhonha"],pesquisa_pct:"2.º mais votado — Jequitinhonha/Mucuri (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_ulysses",nome:"Ulysses Gomes",partido:"PT",coalicao:"GOV",uf:"MG",regioes:["jequitinhonha"],pesquisa_pct:"Eleito em 2022 — base no Jequitinhonha",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_nayara",nome:"Nayara Rocha",partido:"PP",coalicao:"GOV",uf:"MG",regioes:["jequitinhonha"],pesquisa_pct:"Eleita em 2022 — base no Jequitinhonha",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}}]},"noroeste":{pesquisa:["deMG_marli","deMG_roberto"],candidatos:[{id:"deMG_marli",nome:"Marli Ribeiro",partido:"PSC",coalicao:"OPO",uf:"MG",regioes:["noroeste"],pesquisa_pct:"24.319 votos — mais votada do Noroeste de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG (1.º mandato), base eleitoral consolidada no Noroeste de Minas.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_roberto",nome:"Roberto Andrade",partido:"PATRIOTA",coalicao:"OPO",uf:"MG",regioes:["noroeste"],pesquisa_pct:"2.º mais votado — Noroeste de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_doorgal",nome:"Doorgal Andrada",partido:"PATRIOTA",coalicao:"OPO",uf:"MG",regioes:["noroeste"],pesquisa_pct:"Eleito em 2022 — base no Noroeste de Minas",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_gil",nome:"Gil Pereira",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["noroeste"],pesquisa_pct:"Eleito em 2022 — base no Noroeste de Minas",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}}]},"centro_oeste":{pesquisa:["deMG_fabio","deMG_bosco"],candidatos:[{id:"deMG_fabio",nome:"Fábio Avelar",partido:"AVANTE",coalicao:"GOV",uf:"MG",regioes:["centro_oeste","triangulo"],pesquisa_pct:"73.896 votos — mais votado do Centro-Oeste (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (3.º mandato), base eleitoral no Centro-Oeste e Triângulo.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_bosco",nome:"Bosco",partido:"CIDADANIA",coalicao:"CTR",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"2.º mais votado — Centro-Oeste de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_leandro",nome:"Leandro Genaro",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"Eleito em 2022 — base no Centro-Oeste",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_marcia_gripp",nome:"Dra. Márcia Gripp",partido:"PRD",coalicao:"GOV",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"Debutante — Nova Serrana, Centro-Oeste",debutante:true,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c2:{status:"aprovado",justificativa:"Médica cirurgiã com 36 anos de atuação em Nova Serrana. Ex-vice-prefeita de Nova Serrana (2009–2012). Primeira candidatura à ALMG.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Sem histórico fiscal verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_wendinho",nome:"Wendinho (Wirley Reis)",partido:"NOVO",coalicao:"OPO",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"Debutante — Itaúna, Centro-Oeste",debutante:true,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c2:{status:"aprovado",justificativa:"Administrador de empresas, pós-graduado em Gestão de Pessoas, empresário e consultor em gestão gastronômica. Vereador de Itaúna. Primeira candidatura à ALMG.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Partido NOVO defende controle de gastos e responsabilidade fiscal.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"}}},{id:"deMG_kell",nome:"Kell Silva",partido:"PV",coalicao:"GOV",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"Debutante — Divinópolis, Centro-Oeste",debutante:true,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c2:{status:"aprovado",justificativa:"Professora, mestre e doutora em História. Vereadora em primeiro mandato em Divinópolis. Primeira candidatura à ALMG.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c3:{status:"aprovado",justificativa:"Atuação documentada em defesa da liberdade de expressão, igualdade racial e direitos das mulheres.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c4:{status:"desconhecido",justificativa:"Sem histórico fiscal verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_natan",nome:"Natan Oliveira",partido:"PDT",coalicao:"GOV",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"Debutante — Nova Serrana, Centro-Oeste",debutante:true,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c2:{status:"aprovado",justificativa:"Professor, servidor público, vereador de Nova Serrana e fundador do movimento 'De Onde a Gente Vem Importa'. Primeira candidatura à ALMG.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c3:{status:"aprovado",justificativa:"Atuação documentada em educação, cultura, diversidade e justiça social.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c4:{status:"desconhecido",justificativa:"Sem histórico fiscal verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_marcelina",nome:"Marcelina Liberato",partido:"REDE",coalicao:"GOV",uf:"MG",regioes:["centro_oeste"],pesquisa_pct:"Debutante — Divinópolis, Centro-Oeste",debutante:true,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c2:{status:"aprovado",justificativa:"Jornalista, escritora, mestre em Educação Profissional e Tecnológica. Presidente licenciada do Compir de Divinópolis. Mais de 30 anos em Divinópolis. Primeira candidatura à ALMG.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c3:{status:"aprovado",justificativa:"Atuação documentada em igualdade racial, educação e representação. Liderança institucional verificada.",fonte:"https://portalgerais.com/eleicoes-2026-saiba-quem-sao-os-candidatos-a-deputado-estadual-do-centro-oeste-mineiro"},c4:{status:"desconhecido",justificativa:"Sem histórico fiscal verificado nas fontes disponíveis.",fonte:null}}}]},"alto_paranaiba":{pesquisa:["deMG_lud","deMG_grego"],candidatos:[{id:"deMG_lud",nome:"Lud Falcão",partido:"PODEMOS",coalicao:"OPO",uf:"MG",regioes:["alto_paranaiba"],pesquisa_pct:"50.560 votos — mais votada do Alto Paranaíba (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG (1.º mandato), base eleitoral consolidada no Alto Paranaíba.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_grego",nome:"Grego",partido:"PMN",coalicao:"CTR",uf:"MG",regioes:["alto_paranaiba"],pesquisa_pct:"2.º mais votado — Alto Paranaíba (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_ione",nome:"Ione Pinheiro",partido:"UNIÃO",coalicao:"OPO",uf:"MG",regioes:["alto_paranaiba"],pesquisa_pct:"Eleita em 2022 — base no Alto Paranaíba",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputada estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_elismar",nome:"Elismar Prado",partido:"PROS",coalicao:"GOV",uf:"MG",regioes:["alto_paranaiba"],pesquisa_pct:"Eleito em 2022 — base no Alto Paranaíba",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG, trajetória legislativa na ALMG verificada.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}}]},"_geral":{pesquisa:["deMG_engler","deMG_cassio"],candidatos:[{id:"deMG_engler",nome:"Bruno Engler",partido:"PL",coalicao:"OPO",uf:"MG",regioes:["central"],pesquisa_pct:"637.412 votos — mais votado de MG (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (2019–2026), mais votado do estado em 2022 com 637.412 votos.",fonte:"https://www.poder360.com.br/brasil/saiba-quem-sao-os-deputados-estaduais-eleitos-por-mg-em-2022/"},c3:{status:"desconhecido",justificativa:"Posições sobre regulação de plataformas em debate; sem posição formal verificada.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_cassio",nome:"Cassio Soares",partido:"PSD",coalicao:"CTR",uf:"MG",regioes:["sul"],pesquisa_pct:"94.457 votos — mais votado do Sul de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (4.º mandato), base eleitoral consolidada no Sul de Minas.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}},{id:"deMG_tadeuzinho",nome:"Tadeuzinho",partido:"MDB",coalicao:"GOV",uf:"MG",regioes:["norte"],pesquisa_pct:"89.229 votos — mais votado do Norte de Minas (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (4.º mandato), base eleitoral consolidada no Norte de Minas.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na ALMG não verificado nas fontes disponíveis.",fonte:null}}},{id:"deMG_raul",nome:"Raul Belém",partido:"CIDADANIA",coalicao:"CTR",uf:"MG",regioes:["triangulo"],pesquisa_pct:"63.973 votos — mais votado do Triângulo Mineiro (2022)",debutante:false,criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.almg.gov.br/"},c2:{status:"aprovado",justificativa:"Deputado estadual por MG (2.º mandato), base eleitoral consolidada no Triângulo Mineiro.",fonte:"https://www.almg.gov.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na ALMG.",fonte:"https://www.almg.gov.br/"}}}]}};
+
+const CANDIDATOS_DB={presidente:{pesquisa:["p_lula","p_flavio"],candidatos:[{id:"p_lula",nome:"Luiz Inácio Lula da Silva",partido:"PT",coalicao:"GOV",vice:"Geraldo Alckmin (PSB)",pesquisa_pct:"41% — PoderData 13/08/2026",criterios:{c1:{status:"aprovado",justificativa:"Condenações da Lava Jato anuladas pelo STF em 2021 por suspeição do juiz e incompetência da vara. Sem condenação válida atualmente.",fonte:"https://portal.stf.jus.br/processos/detalhe.asp?incidente=5924142"},c2:{status:"aprovado",justificativa:"Metalúrgico, fundador do PT (1980), presidente em 2003–2010 e 2023–2026. Sétima candidatura presidencial.",fonte:"https://www.bbc.com/portuguese/articles/cly8vyqv06jo"},c3:{status:"desconhecido",justificativa:"Sem declaração formal verificada sobre liberdade de expressão e regulação de mídia/redes sociais para 2026.",fonte:null},c4:{status:"reprovado",justificativa:"Crescimento real de gastos entre 0,6% e 2,5%; déficit primário acima da meta em 2023. Arcabouço fiscal mantido, mas com pressão de despesas.",fonte:"https://kazacapital.com.br/eleicoes-2026-as-propostas-economicas-de-cada-candidato-a-presidencia/"}}},{id:"p_flavio",nome:"Flávio Bolsonaro",partido:"PL",coalicao:"OPO",vice:"Alfredo Gaspar (PL)",pesquisa_pct:"35% — PoderData 13/08/2026",criterios:{c1:{status:"desconhecido",justificativa:"Investigações sobre 'rachadinha' no gabinete da Alerj mencionadas como arquivadas nas fontes, mas sem certidão judicial oficial verificada.",fonte:"https://www.bbc.com/portuguese/articles/cly8vyqv06jo"},c2:{status:"aprovado",justificativa:"Advogado, empresário, deputado estadual no RJ por 4 mandatos (2003–2018), senador desde 2019. Apresentou 57 projetos de lei no Senado.",fonte:"https://exame.com/brasil/quem-sao-os-13-candidatos-a-presidencia-nas-eleicoes-2026/"},c3:{status:"desconhecido",justificativa:"Sem posição programática documentada sobre liberdade de expressão e imprensa para 2026.",fonte:null},c4:{status:"aprovado",justificativa:"Propõe âncora fiscal baseada na dívida/PIB, ajuste inicial de ~2% do PIB, privatização de 95% das estatais federais e revisão de despesas obrigatórias.",fonte:"https://kazacapital.com.br/eleicoes-2026-as-propostas-economicas-de-cada-candidato-a-presidencia/"}}},{id:"p_caiado",nome:"Ronaldo Caiado",partido:"PSD",coalicao:"CTR",vice:"Gilberto Kassab (PSD)",pesquisa_pct:"4% — PoderData 13/08/2026",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Campanha usa slogan 'ficha-limpa e com entregas'. Consultar TSE/CNJ para certidão oficial.",fonte:"https://veja.abril.com.br/brasil/o-slogan-de-caiado-que-alfinetara-lula-e-flavio-bolsonaro/"},c2:{status:"aprovado",justificativa:"Médico, fundador da UDR (1985), candidato à presidência em 1989, 5 mandatos de deputado federal, senador e governador de Goiás (2019–2026).",fonte:"https://www.jota.info/eleicoes/eleicoes-2026/quem-sao-os-candidatos-a-presidente-da-republica-do-brasil-eleicoes-de-2026-agosto"},c3:{status:"desconhecido",justificativa:"Sem posição específica documentada sobre liberdade de expressão e imprensa para 2026.",fonte:null},c4:{status:"aprovado",justificativa:"Defende ajuste fiscal, reforma administrativa, cortes na máquina pública e PPPs. Economia estimada de R$ 330 bilhões segundo a CNC.",fonte:"https://kazacapital.com.br/eleicoes-2026-as-propostas-economicas-de-cada-candidato-a-presidencia/"}}},{id:"p_zema",nome:"Romeu Zema",partido:"NOVO",coalicao:"OPO",vice:"Eduardo Girão (NOVO)",pesquisa_pct:"3% — PoderData 13/08/2026",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Governador de MG por 2 mandatos sem registros de improbidade. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.bbc.com/portuguese/articles/cly8vyqv06jo"},c2:{status:"aprovado",justificativa:"Empresário, CEO do Grupo Zema por 26 anos, governador de MG (2019–2026), reeleito em 2022 com 56,18% no 1.º turno.",fonte:"https://www.jota.info/eleicoes/eleicoes-2026/quem-sao-os-candidatos-a-presidente-da-republica-do-brasil-eleicoes-de-2026-agosto"},c3:{status:"desconhecido",justificativa:"Críticas ao STF documentadas, mas sem programa específico e verificável sobre liberdade de expressão e imprensa.",fonte:null},c4:{status:"aprovado",justificativa:"Agenda liberal: reforma previdenciária ampla, corte de ministérios, privatizações, venda de ativos, redução gradual de impostos.",fonte:"https://www.gazetadopovo.com.br/economia/direita-liberal-presidenciaveis-economia-2026/"}}},{id:"p_renan",nome:"Renan Santos",partido:"MISSÃO",coalicao:"OPO",vice:"Coronel Medina (Missão)",pesquisa_pct:"4% — PoderData 13/08/2026",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.bbc.com/portuguese/articles/cly8vyqv06jo"},c2:{status:"aprovado",justificativa:"Empresário, músico, cofundador do MBL (2014). Liderança em mobilizações pelo impeachment de Dilma Rousseff.",fonte:"https://www.jota.info/eleicoes/eleicoes-2026/quem-sao-os-candidatos-a-presidente-da-republica-do-brasil-eleicoes-de-2026-agosto"},c3:{status:"desconhecido",justificativa:"Trajetória em redes sociais documentada, mas sem programa formal verificado sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Propõe ajuste fiscal de R$ 1,1 trilhão até 2031, cortes de R$ 3,3 trilhões em 10 anos e Lei de Responsabilidade Gerencial.",fonte:"https://www.gazetadopovo.com.br/economia/direita-liberal-presidenciaveis-economia-2026/"}}},{id:"p_cury",nome:"Augusto Cury",partido:"AVANTE",coalicao:"GOV",vice:"Júlio Delgado (Avante)",pesquisa_pct:"3% — PoderData 13/08/2026",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações ou investigações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.bbc.com/portuguese/articles/c75kpvgxqewo"},c2:{status:"aprovado",justificativa:"Médico psiquiatra, escritor, professor, pesquisador. Criador da Teoria da Inteligência Multifocal. Primeira candidatura eleitoral em 2026.",fonte:"https://investidor10.com.br/amp/conteudo/augusto-cury-conheca-a-trajetoria-profissional-e-politica-do-candidato-a-presidencia-122012/"},c3:{status:"aprovado",justificativa:"Declara-se favorável à liberdade de expressar ideias. Propõe campanha '100% projetos, 0% ataques'. Critica transmissão ao vivo de votos do STF.",fonte:"https://www.bbc.com/portuguese/articles/c75kpvgxqewo"},c4:{status:"desconhecido",justificativa:"Defende 'mente capitalista e coração social' e Estado enxuto, mas sem metas fiscais ou estimativas de impacto publicadas.",fonte:"https://kazacapital.com.br/eleicoes-2026-as-propostas-economicas-de-cada-candidato-a-presidencia/"}}}]},governador:{pesquisa:["gMG_cleitinho","gMG_kalil"],candidatos:[{id:"gMG_cleitinho",nome:"Cleitinho Azevedo",partido:"REPUBLICANOS",coalicao:"OPO",uf:"MG",numero:10,pesquisa_pct:"35–38% — Genial/Quaest e RTBD (jul/2026)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Candidato ao governo de MG em 2026 (nº 10). Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c2:{status:"aprovado",justificativa:"Senador por MG (eleito 2022), ex-prefeito de Coronel Fabriciano. Candidato ao governo de MG em 2026, número 10.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal no Senado. Perfil liberal-conservador.",fonte:"https://www25.senado.leg.br/"}}},{id:"gMG_kalil",nome:"Alexandre Kalil",partido:"PDT",coalicao:"GOV",uf:"MG",numero:12,pesquisa_pct:"15% — Genial/Quaest (jul/2026)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c2:{status:"aprovado",justificativa:"Ex-prefeito de BH (2017–2022), ex-presidente do Atlético-MG. Candidato ao governo de MG em 2026, número 12.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Propostas fiscais para 2026 não publicadas nas fontes verificadas.",fonte:null}}},{id:"gMG_patrus",nome:"Patrus Ananias",partido:"PT",coalicao:"GOV",uf:"MG",numero:13,pesquisa_pct:"13% — Genial/Quaest (jul/2026)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c2:{status:"aprovado",justificativa:"Ex-deputado federal por 5 mandatos, ex-ministro do Desenvolvimento Social, ex-prefeito de BH. Candidato ao governo de MG em 2026, número 13.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Propostas fiscais para 2026 não publicadas nas fontes verificadas.",fonte:null}}},{id:"gMG_mateus",nome:"Mateus Simões",partido:"PSD",coalicao:"CTR",uf:"MG",numero:55,pesquisa_pct:"9% — Genial/Quaest (jul/2026)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c2:{status:"aprovado",justificativa:"Vice-governador de MG (2023–2026), ex-secretário estadual, economista.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Perfil técnico-econômico; atuação na gestão fiscal do estado de MG.",fonte:"https://portaldatransparencia.gov.br/"}}}]},senador:{pesquisa:["sMG_marilia","sMG_aecio"],candidatos:[{id:"sMG_marilia",nome:"Marília Campos",partido:"PT",coalicao:"GOV",uf:"MG",pesquisa_pct:"20–24% — Genial/Quaest e RTBD (jul/2026)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://g1.globo.com/mg/minas-gerais/eleicoes/2026/noticia/2026/07/28/quaest-mg-senado-julho.ghtml"},c2:{status:"aprovado",justificativa:"Prefeita de Contagem (2017–2024), ex-vereadora, ex-deputada estadual. Liderança do PT em MG.",fonte:"https://g1.globo.com/mg/minas-gerais/eleicoes/2026/noticia/2026/07/28/quaest-mg-senado-julho.ghtml"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"desconhecido",justificativa:"Propostas fiscais para o Senado não publicadas nas fontes verificadas.",fonte:null}}},{id:"sMG_aecio",nome:"Aécio Neves",partido:"PSDB",coalicao:"CTR",uf:"MG",pesquisa_pct:"16% — Genial/Quaest (jul/2026)",criterios:{c1:{status:"desconhecido",justificativa:"Absolvido pelo STF em 2023 no caso da mala de dinheiro, mas processo gerou controvérsia. Sem condenação definitiva. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.stf.jus.br/"},c2:{status:"aprovado",justificativa:"Ex-governador de MG (2003–2010), ex-senador, candidato à presidência em 2014. Trajetória política extensa.",fonte:"https://www.tse.jus.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão para 2026.",fonte:null},c4:{status:"aprovado",justificativa:"Histórico de votações favoráveis ao equilíbrio fiscal no Senado.",fonte:"https://www25.senado.leg.br/"}}},{id:"sMG_domingos",nome:"Domingos Sávio",partido:"PL",coalicao:"OPO",uf:"MG",pesquisa_pct:"10,22% — IPAN/Panorama (jun/2026)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.cnnbrasil.com.br/eleicoes/ipan-panorama-marilia-savio-e-viana-empatam-na-disputa-pelo-senado-em-mg/"},c2:{status:"aprovado",justificativa:"Deputado federal por MG por 4 mandatos, ex-vereador em BH.",fonte:"https://www.camara.leg.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na Câmara.",fonte:"https://www.camara.leg.br/"}}},{id:"sMG_alexandre",nome:"Alexandre Silveira",partido:"PSD",coalicao:"GOV",uf:"MG",pesquisa_pct:"Dado não disponível",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.tse.jus.br/"},c2:{status:"aprovado",justificativa:"Senador por MG, ex-ministro de Minas e Energia (2023–2026).",fonte:"https://www.tse.jus.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal no Senado não verificado nas fontes disponíveis.",fonte:null}}}]},deputadoFederal:{pesquisa:["dfMG_nikolas","dfMG_reginaldo"],candidatos:[{id:"dfMG_nikolas",nome:"Nikolas Ferreira",partido:"PL",coalicao:"OPO",uf:"MG",pesquisa_pct:"1,47M votos em 2022 — candidatura 2026 não confirmada",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.tse.jus.br/"},c2:{status:"aprovado",justificativa:"Deputado federal mais votado do Brasil em 2022 (1,47M votos), ex-vereador em BH. Candidatura 2026 não confirmada nas fontes verificadas.",fonte:"https://www.camara.leg.br/noticias/911467-minas-gerais-reelege-37-deputados-pl-e-pt-terao-as-maiores-bancadas/"},c3:{status:"desconhecido",justificativa:"Posições contraditórias sobre regulação de plataformas; sem posição formal verificada.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na Câmara.",fonte:"https://www.camara.leg.br/"}}},{id:"dfMG_reginaldo",nome:"Reginaldo Lopes",partido:"PT",coalicao:"GOV",uf:"MG",pesquisa_pct:"5 mandatos consecutivos — referência de relevância",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.tse.jus.br/"},c2:{status:"aprovado",justificativa:"Deputado federal por MG por 5 mandatos consecutivos. Liderança do PT na Câmara.",fonte:"https://www.camara.leg.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"desconhecido",justificativa:"Histórico fiscal na Câmara não verificado nas fontes disponíveis.",fonte:null}}},{id:"dfMG_flavio_roscoe",nome:"Flávio Roscoe",partido:"PL",coalicao:"OPO",uf:"MG",pesquisa_pct:"Candidato ao governo de MG (nº 22)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c2:{status:"aprovado",justificativa:"Deputado federal por MG, candidato ao governo de MG em 2026 pelo PL (número 22). Trajetória legislativa verificada.",fonte:"https://www.camara.leg.br/"},c3:{status:"desconhecido",justificativa:"Sem posição formal verificada sobre liberdade de expressão.",fonte:null},c4:{status:"aprovado",justificativa:"Votações favoráveis ao controle fiscal na Câmara.",fonte:"https://www.camara.leg.br/"}}},{id:"dfMG_indira",nome:"Indira Xavier",partido:"UP",coalicao:"CTR",uf:"MG",pesquisa_pct:"Candidata ao governo de MG (nº 80)",criterios:{c1:{status:"aprovado",justificativa:"Sem condenações indicadas nas fontes verificadas. Consultar TSE/CNJ para certidão oficial.",fonte:"https://www.gazetadopovo.com.br/eleicoes/2026/minas-gerais/quem-sao-candidatos-governador-minas-gerais-2026/"},c2:{status:"aprovado",justificativa:"Deputada federal por MG, candidata ao governo de MG em 2026 pela UP (número 80). Ativista de direitos humanos.",fonte:"https://www.camara.leg.br/"},c3:{status:"aprovado",justificativa:"Histórico de defesa da liberdade de expressão e direitos humanos.",fonte:"https://agenciabrasil.ebc.com.br/"},c4:{status:"reprovado",justificativa:"UP defende reestatização e auditoria da dívida pública.",fonte:"https://www.gazetadopovo.com.br/economia/direita-liberal-presidenciaveis-economia-2026/"}}}]}};
+
+const ESTADO={uf:null,municipio:null,ibge:null,regiao:null,criteriosSelecionados:[],candidatosSelecionados:{},resultados:{},cargoAtivo:0};
+const _cidadeCache={};
+
+document.addEventListener("DOMContentLoaded",()=>{renderizarCriterios();formatarCampoCep();});
+
+function renderizarCriterios(){
+  const grid=document.getElementById("criteriosGrid");grid.innerHTML="";
+  const itemTodos=document.createElement("div");itemTodos.className="criterio-item todos";
+  itemTodos.innerHTML=`<input type="checkbox" id="cTodos" onchange="toggleTodos(this)"/><label for="cTodos"><strong>Todos os critérios</strong> — Aplicar os 4 critérios simultaneamente</label>`;
+  grid.appendChild(itemTodos);
+  CRITERIOS.forEach((c,i)=>{const item=document.createElement("div");item.className="criterio-item";item.innerHTML=`<input type="checkbox" id="${c.id}" value="${c.id}" onchange="atualizarCriterios()"/><label for="${c.id}"><strong>Critério ${i+1}:</strong> ${c.label}</label>`;grid.appendChild(item);});
+}
+
+function formatarCampoCep(){
+  const campo=document.getElementById("campoCep");
+  campo.addEventListener("input",(e)=>{
+    let v=e.target.value.replace(/\D/g,"");
+    if(v.length>5)v=v.slice(0,5)+"-"+v.slice(5,8);
+    e.target.value=v;
+    if(v.length===8) buscarDadosCidade(v);
+    else ocultarCidade();
+  });
+  campo.addEventListener("keydown",(e)=>{if(e.key==="Enter")iniciarBusca();});
+}
+
+function toggleTodos(cb){document.querySelectorAll("#criteriosGrid input[type=checkbox]:not(#cTodos)").forEach(c=>{c.checked=cb.checked;});atualizarCriterios();}
+function atualizarCriterios(){const checks=document.querySelectorAll("#criteriosGrid input[type=checkbox]:not(#cTodos):checked");ESTADO.criteriosSelecionados=Array.from(checks).map(c=>c.value);const todos=document.querySelectorAll("#criteriosGrid input[type=checkbox]:not(#cTodos)");document.getElementById("cTodos").checked=(ESTADO.criteriosSelecionados.length===todos.length);}
+
+// ================================================================
+// PAINEL DA CIDADE
+// Foto: Unsplash Source API — sem CORS, sem chave, funciona em HTTPS
+// Dados: IBGE API — população + PIB
+// Tudo roda em background, independente do fluxo principal
+// ================================================================
+async function buscarDadosCidade(cepRaw){
+  // Mostra painel imediatamente com spinner
+  document.getElementById("cidadePainel").classList.add("visivel");
+  document.getElementById("cidadeSpinner").style.display="flex";
+  document.getElementById("cidadeDadosFaixa").style.display="none";
+
+  if(_cidadeCache[cepRaw]){aplicarDadosCidade(_cidadeCache[cepRaw]);return;}
+
+  try{
+    // 1. ViaCEP
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),8000);
+    const resp=await fetch(`${CONFIG.API_VIACEP}${cepRaw}/json/`,{signal:ctrl.signal});
+    clearTimeout(t);
+    if(!resp.ok||!resp)throw new Error("CEP inválido");
+    const dados=await resp.json();
+    if(dados.erro)throw new Error("CEP não encontrado");
+
+    const municipio=dados.localidade;
+    const uf=dados.uf;
+    const ibge=dados.ibge;
+
+    // Salva no estado global
+    ESTADO.uf=uf;ESTADO.municipio=municipio;ESTADO.ibge=ibge;
+    ESTADO.regiao=resolverRegiao(municipio);
+
+    // 2. Foto via Unsplash Source — sem CORS, sem chave de API
+    // Usa palavras-chave: nome da cidade + estado + brazil
+    // O Unsplash retorna uma foto relevante automaticamente
+    const termoFoto=encodeURIComponent(`${municipio} ${uf} brazil city`);
+    const urlFoto=`https://source.unsplash.com/featured/1200x400/?${termoFoto}`;
+
+    // 3. IBGE em paralelo (não bloqueia a foto)
+    const ibgePromise=buscarIBGE(ibge);
+
+    // Aplica foto imediatamente (carrega de forma assíncrona pelo browser)
+    document.getElementById("cidadeNome").textContent=municipio;
+    document.getElementById("cidadeUf").textContent=uf;
+    const img=document.getElementById("cidadeImg");
+    img.src=urlFoto;
+    img.alt=`Foto de ${municipio}`;
+    document.getElementById("cidadeSpinner").style.display="none";
+
+    // 4. Aguarda IBGE e exibe dados
+    const ibgeData=await ibgePromise;
+
+    const cidade={municipio,uf,ibge,urlFoto,
+      populacao:ibgeData.populacao||null,popAno:ibgeData.popAno||null,
+      pib:ibgeData.pib||null,pibAno:ibgeData.pibAno||null,
+    };
+    _cidadeCache[cepRaw]=cidade;
+    aplicarDadosCidade(cidade);
+
+  }catch(err){
+    console.warn("Painel da cidade:",err.message);
+    ocultarCidade();
+  }
+}
+
+function aplicarDadosCidade(cidade){
+  document.getElementById("cidadeNome").textContent=cidade.municipio;
+  document.getElementById("cidadeUf").textContent=cidade.uf;
+
+  // Foto — reaplicar se veio do cache
+  const img=document.getElementById("cidadeImg");
+  if(img.src!==cidade.urlFoto){img.src=cidade.urlFoto;img.alt=`Foto de ${cidade.municipio}`;}
+  document.getElementById("cidadeSpinner").style.display="none";
+
+  // Dados
+  const popEl=document.getElementById("cidadePopulacao");
+  const popSub=document.getElementById("cidadePopulacaoSub");
+  if(cidade.populacao){
+    popEl.textContent=cidade.populacao;popEl.className="cidade-dado-valor";
+    popSub.textContent=cidade.popAno?"Estimativa "+cidade.popAno+" · Fonte: IBGE":"Fonte: IBGE";
+  }else{
+    popEl.textContent="Indisponível";popEl.className="cidade-dado-valor nd";
+    popSub.textContent="Consulte ibge.gov.br";
+  }
+
+  const pibEl=document.getElementById("cidadePib");
+  const pibSub=document.getElementById("cidadePibSub");
+  if(cidade.pib){
+    pibEl.textContent=cidade.pib;pibEl.className="cidade-dado-valor";
+    pibSub.textContent=cidade.pibAno?"Último dado disponível: "+cidade.pibAno+" · Fonte: IBGE":"Fonte: IBGE";
+  }else{
+    pibEl.textContent="Indisponível";pibEl.className="cidade-dado-valor nd";
+    pibSub.textContent="Consulte ibge.gov.br";
+  }
+
+  document.getElementById("cidadeDadosFaixa").style.display="flex";
+  document.getElementById("cidadePainel").classList.add("visivel");
+}
+
+async function buscarIBGE(ibge){
+  const resultado={};
+  // População
+  try{
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),6000);
+    const resp=await fetch(
+      `https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/2024|2023|2022/variaveis/9324?localidades=N6[${ibge}]`,
+      {signal:ctrl.signal}
+    );
+    clearTimeout(t);
+    if(resp.ok){
+      const data=await resp.json();
+      const serie=data?.[0]?.resultados?.[0]?.series?.[0]?.serie;
+      if(serie){
+        const anos=Object.keys(serie).sort((a,b)=>b-a);
+        for(const ano of anos){
+          const val=parseInt(serie[ano]);
+          if(val>0){resultado.populacao=val.toLocaleString("pt-BR")+" hab.";resultado.popAno=ano;break;}
+        }
+      }
+    }
+  }catch(e){console.warn("IBGE pop:",e.message);}
+  // PIB
+  try{
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),6000);
+    const resp=await fetch(
+      `https://servicodados.ibge.gov.br/api/v3/agregados/5938/periodos/2021|2020|2019/variaveis/37?localidades=N6[${ibge}]`,
+      {signal:ctrl.signal}
+    );
+    clearTimeout(t);
+    if(resp.ok){
+      const data=await resp.json();
+      const serie=data?.[0]?.resultados?.[0]?.series?.[0]?.serie;
+      if(serie){
+        const anos=Object.keys(serie).sort((a,b)=>b-a);
+        for(const ano of anos){
+          const val=parseFloat(serie[ano]);
+          if(val>0){
+            const r=val*1000;
+            resultado.pib=r>=1e9?"R$ "+(r/1e9).toFixed(1).replace(".",",")+" bilhões":"R$ "+(r/1e6).toFixed(1).replace(".",",")+" milhões";
+            resultado.pibAno=ano;break;
+          }
+        }
+      }
+    }
+  }catch(e){console.warn("IBGE PIB:",e.message);}
+  return resultado;
+}
+
+function ocultarCidade(){document.getElementById("cidadePainel").classList.remove("visivel");}
+
+// ================================================================
+// BOTÃO LIMPAR
+// ================================================================
+function limparTudo(){
+  document.getElementById("campoCep").value="";
+  document.querySelectorAll("#criteriosGrid input[type=checkbox]").forEach(c=>{c.checked=false;});
+  ESTADO.criteriosSelecionados=[];ESTADO.uf=null;ESTADO.municipio=null;ESTADO.ibge=null;ESTADO.regiao=null;
+  ESTADO.candidatosSelecionados={};ESTADO.resultados={};ESTADO.cargoAtivo=0;
+  ocultarCidade();esconderResultados();limparMensagens();
+  document.getElementById("btnBuscar").disabled=false;
+}
+
+// ================================================================
+// BOTÃO ATUALIZAR DADOS
+// ================================================================
+async function atualizarDados(){
+  const btn=document.getElementById("btnAtualizar");const statusEl=document.getElementById("statusAtualizacao");const resultadoEl=document.getElementById("resultadoAtualizacao");
+  btn.disabled=true;btn.innerHTML=`<span>&#128260;</span> Verificando...`;
+  statusEl.innerHTML=`<div class="dot aguardando"></div><span>Consultando TSE Dados Abertos...</span>`;
+  resultadoEl.style.display="none";
+  const agora=new Date();const horaStr=agora.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  try{
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),8000);
+    const url=`${CONFIG.API_TSE_BASE}package_show?id=candidatos-${CONFIG.ANO_ELEICAO}`;
+    const resp=await fetch(CONFIG.CORS_PROXY?CONFIG.CORS_PROXY+url:url,{signal:ctrl.signal,headers:{"Accept":"application/json"}});
+    clearTimeout(t);if(!resp.ok)throw new Error(`HTTP ${resp.status}`);
+    const dados=await resp.json();
+    if(dados.success&&dados.result){
+      const pkg=dados.result;const recursos=(pkg.resources||[]).map(r=>({nome:r.name||"Recurso",formato:r.format||"—",url:r.url||"#",atualizado:r.last_modified||r.created||"—"}));
+      statusEl.innerHTML=`<div class="dot ok"></div><span>TSE online — última verificação: ${horaStr}</span>`;
+      let html=`<div style="background:#f0faf0;border-radius:6px;padding:10px 14px;"><div style="font-weight:600;color:#2e7d32;margin-bottom:6px;">&#9989; API do TSE respondeu com sucesso</div><div style="margin-bottom:4px;"><strong>Dataset:</strong> ${pkg.title||"Candidatos 2026"}</div><div style="margin-bottom:8px;"><strong>Última modificação no TSE:</strong> ${pkg.metadata_modified||"não informada"}</div>`;
+      if(recursos.length>0){html+=`<ul style="font-size:0.76rem;color:#4a5568;padding-left:16px;">`;recursos.slice(0,5).forEach(r=>{html+=`<li><a href="${r.url}" target="_blank" rel="noopener" style="color:#1a56a0;">${r.nome}</a> (${r.formato}) — ${r.atualizado}</li>`;});html+=`</ul>`;}
+      html+=`<div style="margin-top:8px;font-size:0.76rem;color:#7a5c00;background:#fff8e1;border-radius:4px;padding:6px 10px;">&#9888; Os dados de critérios continuam sendo do banco local. Para verificar candidaturas individualmente, acesse <a href="https://divulgacandcontas.tse.jus.br" target="_blank" rel="noopener" style="color:#1a56a0;">divulgacandcontas.tse.jus.br</a>.</div></div>`;
+      resultadoEl.innerHTML=html;resultadoEl.style.display="block";
+    }else throw new Error("Resposta inesperada");
+  }catch(err){
+    statusEl.innerHTML=`<div class="dot erro"></div><span>TSE indisponível — dados locais em uso — verificado: ${horaStr}</span>`;
+    resultadoEl.style.display="none";
+  }
+  btn.disabled=false;btn.innerHTML=`<span>&#128260;</span> Atualizar Dados do TSE`;
+}
+
+// ================================================================
+// BUSCA PRINCIPAL
+// ================================================================
+async function iniciarBusca(){
+  limparMensagens();esconderResultados();
+  const cepRaw=document.getElementById("campoCep").value.replace(/\D/g,"");
+  if(cepRaw.length!==8){exibirMensagem("erro","CEP inválido. Por favor, informe um CEP com 8 dígitos (ex: 30130-010).");return;}
+  atualizarCriterios();
+  if(ESTADO.criteriosSelecionados.length===0){exibirMensagem("aviso","Selecione pelo menos um critério de avaliação antes de buscar.");return;}
+  exibirSpinner("Consultando dados...");
+  document.getElementById("btnBuscar").disabled=true;
+  try{
+    // Se o CEP ainda não foi resolvido, resolve agora
+    if(!ESTADO.uf){
+      atualizarSpinner("Consultando ViaCEP...");
+      const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),CONFIG.TIMEOUT_MS);
+      const resp=await fetch(`${CONFIG.API_VIACEP}${cepRaw}/json/`,{signal:ctrl.signal});
+      clearTimeout(t);
+      if(!resp.ok)throw{tipo:"cep_invalido"};
+      const dados=await resp.json();
+      if(dados.erro)throw{tipo:"cep_invalido"};
+      ESTADO.uf=dados.uf;ESTADO.municipio=dados.localidade;ESTADO.ibge=dados.ibge;
+      ESTADO.regiao=resolverRegiao(dados.localidade);
+      buscarDadosCidade(cepRaw); // dispara em background
+    }
+    if(ESTADO.uf!==CONFIG.UF_SUPORTADA)document.getElementById("estadoAviso").classList.add("visivel");
+    atualizarSpinner("Calculando pontuações...");
+    await new Promise(r=>setTimeout(r,300));
+    pontuarERanquear();
+    renderizarResultados();
+    document.getElementById("resultadosSecao").style.display="block";
+    document.getElementById("progressoCedula").classList.add("visivel");
+    atualizarProgresso();
+    setTimeout(()=>document.getElementById("resultadosSecao").scrollIntoView({behavior:"smooth"}),200);
+  }catch(err){
+    console.error("Erro na busca:",err);
+    if(err.tipo==="cep_invalido")exibirMensagem("erro","CEP não encontrado. Verifique o número e tente novamente.");
+    else if(err.tipo==="cors"){document.getElementById("corsAviso").classList.add("visivel");exibirMensagem("aviso","Não foi possível acessar algumas APIs por restrições de CORS.");}
+    else exibirMensagem("erro",`Erro ao buscar dados: ${err.message||"Erro desconhecido"}. Tente novamente.`);
+  }finally{ocultarSpinner();document.getElementById("btnBuscar").disabled=false;}
+}
+
+// ================================================================
+// MOTOR DE PONTUAÇÃO
+// ================================================================
+function pontuarERanquear(){
+  const criterios=ESTADO.criteriosSelecionados;const regiao=ESTADO.regiao||"_geral";
+  ["presidente","governador","senador","deputadoFederal"].forEach(chave=>{ESTADO.resultados[chave]=calcularTopCargo(CANDIDATOS_DB[chave],criterios);});
+  ESTADO.resultados["deputadoEstadual"]=calcularTopCargo(DEP_ESTADUAL_REGIOES[regiao]||DEP_ESTADUAL_REGIOES["_geral"],criterios);
+}
+
+function calcularTopCargo(db,criterios){
+  const idsPesquisa=db.pesquisa;
+  const pontuados=db.candidatos.map(cand=>{let aprovados=0,reprovados=0,desconhecidos=0;criterios.forEach(cid=>{const cr=cand.criterios[cid];if(!cr){desconhecidos++;return;}if(cr.status==="aprovado")aprovados++;else if(cr.status==="reprovado")reprovados++;else desconhecidos++;});return{...cand,_score:{aprovados,reprovados,desconhecidos,total:criterios.length}};});
+  const ordenados=[...pontuados].sort((a,b)=>{if(b._score.aprovados!==a._score.aprovados)return b._score.aprovados-a._score.aprovados;if(a._score.desconhecidos!==b._score.desconhecidos)return a._score.desconhecidos-b._score.desconhecidos;return a._score.reprovados-b._score.reprovados;});
+  return{criterio:ordenados.filter(c=>!idsPesquisa.includes(c.id)).slice(0,CONFIG.TOP_CRITERIOS),pesquisa:idsPesquisa.map(id=>pontuados.find(c=>c.id===id)).filter(Boolean)};
+}
+
+function calcularAlinhamento(candidato){const presidId=ESTADO.candidatosSelecionados["presidente"];if(!presidId)return"neutro";const presid=CANDIDATOS_DB.presidente.candidatos.find(p=>p.id===presidId);if(!presid||!presid.coalicao||!candidato.coalicao)return"neutro";if(candidato.coalicao===presid.coalicao)return"alinhado";const aliancas={"GOV":["CTR"],"CTR":["GOV"],"OPO":[]};if((aliancas[presid.coalicao]||[]).includes(candidato.coalicao))return"parcial";return"oposto";}
+
+function calcularGovernabilidade(){const sel=ESTADO.candidatosSelecionados;let alinhados=0,total=0;ORDEM_CARGOS.forEach(cargo=>{const id=sel[cargo];if(!id)return;total++;if(cargo==="presidente"){alinhados++;return;}let cand=null;if(cargo==="deputadoEstadual"){const db=DEP_ESTADUAL_REGIOES[ESTADO.regiao||"_geral"]||DEP_ESTADUAL_REGIOES["_geral"];cand=db.candidatos.find(c=>c.id===id);}else{cand=CANDIDATOS_DB[cargo].candidatos.find(c=>c.id===id);}if(!cand)return;const al=calcularAlinhamento(cand);if(al==="alinhado")alinhados++;else if(al==="parcial")alinhados+=0.5;});return{alinhados,total};}
+
+function atualizarGovernabilidade(){const{alinhados,total}=calcularGovernabilidade();if(total===0)return;const pct=Math.round((alinhados/total)*100);document.getElementById("governabilidadeBox").classList.add("visivel");document.getElementById("govBarraFill").style.width=pct+"%";const nivel=pct>=80?"alto":pct>=50?"médio":"baixo";document.getElementById("govTexto").textContent=`Suas seleções resultam em alinhamento de governabilidade de ${alinhados.toFixed(1)}/${total} (${pct}% — nível ${nivel}). `+(pct<50?"Considere candidatos da mesma coalizão para maior governabilidade.":"Boa coerência de cédula!");}
+
+function renderizarResultados(){
+  const container=document.getElementById("paineisCargos");container.innerHTML="";
+  const uf=ESTADO.uf;const regiao=ESTADO.regiao;
+  const nomeRegiao=regiao&&regiao!=="central"&&REGIOES_MG[regiao]?REGIOES_MG[regiao].nome:(uf===CONFIG.UF_SUPORTADA?"MG":"MG (referência)");
+  const escopoEstadual=uf===CONFIG.UF_SUPORTADA?uf:"MG (referência)";
+  [{chave:"presidente",titulo:"Presidente da República",escopo:"Nacional",icone:"&#127981;"},{chave:"governador",titulo:"Governador do Estado",escopo:escopoEstadual,icone:"&#127963;"},{chave:"senador",titulo:"Senador",escopo:escopoEstadual,icone:"&#127963;"},{chave:"deputadoFederal",titulo:"Deputado Federal",escopo:escopoEstadual,icone:"&#127963;"},{chave:"deputadoEstadual",titulo:"Deputado Estadual",escopo:nomeRegiao,icone:"&#127963;"}].forEach((cfg,idx)=>{
+    const resultado=ESTADO.resultados[cfg.chave]||{criterio:[],pesquisa:[]};
+    const bloqueado=idx>ESTADO.cargoAtivo;const selecionado=!!ESTADO.candidatosSelecionados[cfg.chave];
+    container.appendChild(criarPainelCargo(cfg,resultado,idx===0&&!selecionado,bloqueado,selecionado,idx));
+  });
+}
+
+function criarPainelCargo(cfg,resultado,aberto,bloqueado,selecionado,idx){
+  const painel=document.createElement("div");painel.className=`cargo-painel${bloqueado?" bloqueado":""}`;painel.id=`painel-${cfg.chave}`;
+  let statusBadge="";
+  if(selecionado){const cand=encontrarCandidato(cfg.chave,ESTADO.candidatosSelecionados[cfg.chave]);statusBadge=`<span class="painel-status selecionado-status">&#9989; ${cand?cand.nome.split(" ").slice(0,2).join(" "):"Selecionado"}</span>`;}
+  else if(bloqueado){statusBadge=`<span class="painel-status aguardando">&#128274; Selecione ${LABELS_CARGOS[ORDEM_CARGOS[idx-1]]||"cargo anterior"} primeiro</span>`;}
+  else{statusBadge=`<span class="painel-status disponivel">&#9654; Escolha seu candidato</span>`;}
+  const header=document.createElement("div");header.className=`cargo-header ${(aberto&&!bloqueado)?"aberto":""}`;
+  header.innerHTML=`<h3><span>${cfg.icone}</span>${cfg.titulo}<span class="escopo">${cfg.escopo}</span>${statusBadge}</h3><span class="seta">&#9660;</span>`;
+  const corpo=document.createElement("div");corpo.className=`cargo-corpo ${(aberto&&!bloqueado)?"aberto":""}`;
+  if(!bloqueado){header.addEventListener("click",()=>{header.classList.toggle("aberto");corpo.classList.toggle("aberto");});}
+  if(bloqueado){corpo.innerHTML=`<div class="bloqueio-overlay"><div class="lock-icon">&#128274;</div><div>Selecione um candidato para <strong>${LABELS_CARGOS[ORDEM_CARGOS[idx-1]]||"cargo anterior"}</strong> para desbloquear este cargo.</div></div>`;corpo.classList.add("aberto");}
+  else{const linha=document.createElement("div");linha.className="candidatos-linha";linha.id=`linha-${cfg.chave}`;preencherLinha(linha,resultado,cfg.chave);corpo.appendChild(linha);}
+  painel.appendChild(header);painel.appendChild(corpo);return painel;
+}
+
+function preencherLinha(linha,resultado,cargo){
+  linha.innerHTML="";
+  resultado.criterio.forEach((cand,rank)=>{const card=criarCard(cand,rank+1,cargo,"criterio");card.classList.add("card-criterio");linha.appendChild(card);});
+  const divisor=document.createElement("div");divisor.className="divisor-grid";linha.appendChild(divisor);
+  resultado.pesquisa.forEach((cand,rank)=>{const card=criarCard(cand,rank+1,cargo,"pesquisa");card.classList.add("card-pesquisa");linha.appendChild(card);});
+}
+
+function criarCard(cand,rank,cargo,tipo){
+  const card=document.createElement("div");const alinhamento=calcularAlinhamento(cand);const isSelecionado=ESTADO.candidatosSelecionados[cargo]===cand.id;const isPesquisa=tipo==="pesquisa";
+  card.className=["candidato-card",isPesquisa?"tipo-pesquisa":"",isSelecionado?"selecionado":"",alinhamento!=="neutro"?alinhamento:""].filter(Boolean).join(" ");card.id=`card-${cand.id}`;
+  const score=cand._score;const criterios=ESTADO.criteriosSelecionados;
+  const alinhamentoLabels={alinhado:"&#9989; Alinhado",parcial:"&#9888; Parcial",oposto:"&#10060; Oposto",neutro:"&#8212; Neutro"};
+  const viceHtml=cand.vice?`<div style="font-size:0.7rem;color:#6c757d;margin-bottom:3px;">Vice: ${cand.vice}</div>`:"";
+  const numeroHtml=cand.numero?`<div style="font-size:0.7rem;color:#6c757d;margin-bottom:3px;">Urna: <strong>${cand.numero}</strong></div>`:"";
+  const pesquisaBadge=isPesquisa?`<div class="pesquisa-badge">&#128202; ${cand.pesquisa_pct||"Pesquisa"}</div>`:"";
+  const regiaoNome=cand.regioes&&cand.regioes[0]&&REGIOES_MG[cand.regioes[0]]?REGIOES_MG[cand.regioes[0]].nome:null;
+  const regiaoBadge=(cargo==="deputadoEstadual"&&regiaoNome)?`<div class="regiao-badge">&#128205; ${regiaoNome}</div>`:"";
+  const debutanteBadge=(cand.debutante===true)?`<div class="debutante-badge">&#11088; DEBUTANTE</div>`:"";
+  let criteriosHtml="<ul class='criterios-lista'>";
+  criterios.forEach(cid=>{const def=CRITERIOS.find(c=>c.id===cid);const cr=cand.criterios[cid]||{status:"desconhecido",justificativa:"Dado não disponível.",fonte:null};const statusLabel={aprovado:"APROVADO",reprovado:"REPROVADO",desconhecido:"DESCONHECIDO"}[cr.status];const fonteHtml=cr.fonte?`<div class="criterio-fonte">Fonte: <a href="${cr.fonte}" target="_blank" rel="noopener">${cr.fonte.replace(/https?:\/\//,"").split("/")[0]}</a></div>`:`<div class="criterio-fonte">Dado não disponível</div>`;criteriosHtml+=`<li><div><span class="criterio-status ${cr.status}">${statusLabel}</span><div style="font-size:0.72rem;color:#4a5568;margin-top:1px;">${def?def.label.split("—")[0].trim():cid}</div><div style="font-size:0.68rem;color:#6c757d;margin-top:1px;">${cr.justificativa}</div>${fonteHtml}</div></li>`;});
+  criteriosHtml+="</ul>";
+  const rankClass=isPesquisa?"rank-pesquisa":"rank-criterio";const btnLabel=isSelecionado?"&#10003; Selecionado":"Selecionar";const btnClass=isSelecionado?"btn-selecionar selecionado-btn":"btn-selecionar";
+  card.innerHTML=`<div class="candidato-rank ${rankClass}">${rank}</div><div class="candidato-nome">${cand.nome}</div><div class="candidato-partido">${cand.partido}${cand.uf?" · "+cand.uf:""}</div>${viceHtml}${numeroHtml}<div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px;">${pesquisaBadge}${regiaoBadge}${debutanteBadge}</div><div style="display:flex;flex-wrap:wrap;align-items:center;gap:3px;margin-bottom:6px;"><span class="candidato-score">&#9733; ${score.aprovados}/${score.total}${score.desconhecidos>0?" · "+score.desconhecidos+" desc.":""}</span><span class="alinhamento-badge ${alinhamento}">${alinhamentoLabels[alinhamento]}</span></div>${criteriosHtml}<button class="${btnClass}" onclick="selecionarCandidato('${cargo}','${cand.id}',this)">${btnLabel}</button>`;
+  return card;
+}
+
+function selecionarCandidato(cargo,candidatoId,btn){
+  const idxCargo=ORDEM_CARGOS.indexOf(cargo);const anteriorId=ESTADO.candidatosSelecionados[cargo];
+  if(anteriorId){const cardAnterior=document.getElementById(`card-${anteriorId}`);if(cardAnterior){cardAnterior.classList.remove("selecionado");const b=cardAnterior.querySelector(".btn-selecionar");if(b){b.textContent="Selecionar";b.classList.remove("selecionado-btn");}}}
+  ESTADO.candidatosSelecionados[cargo]=candidatoId;
+  if(idxCargo>=ESTADO.cargoAtivo){ESTADO.cargoAtivo=Math.min(idxCargo+1,ORDEM_CARGOS.length-1);}
+  renderizarResultados();atualizarProgresso();atualizarGovernabilidade();
+  if(idxCargo<ORDEM_CARGOS.length-1){const prox=ORDEM_CARGOS[idxCargo+1];setTimeout(()=>{const p=document.getElementById(`painel-${prox}`);if(p)p.scrollIntoView({behavior:"smooth",block:"start"});},300);}
+}
+
+function atualizarProgresso(){
+  const steps=document.getElementById("progressoSteps");steps.innerHTML="";
+  ORDEM_CARGOS.forEach((cargo,idx)=>{const step=document.createElement("div");const sel=ESTADO.candidatosSelecionados[cargo];const ativo=idx===ESTADO.cargoAtivo;const concluido=!!sel;step.className=`progresso-step ${concluido?"concluido":ativo?"ativo":""}`;const label=LABELS_CARGOS[cargo];const cand=sel?encontrarCandidato(cargo,sel):null;step.innerHTML=concluido?`&#9989; ${label}<br><span style="font-size:0.65rem;font-weight:400;">${cand?cand.nome.split(" ")[0]:"—"}</span>`:ativo?`&#9654; ${label}<br><span style="font-size:0.65rem;font-weight:400;">Escolha agora</span>`:`&#128274; ${label}<br><span style="font-size:0.65rem;font-weight:400;">Aguardando</span>`;steps.appendChild(step);});
+}
+
+function encontrarCandidato(cargo,id){if(cargo==="deputadoEstadual"){const db=DEP_ESTADUAL_REGIOES[ESTADO.regiao||"_geral"]||DEP_ESTADUAL_REGIOES["_geral"];return db.candidatos.find(c=>c.id===id)||null;}return CANDIDATOS_DB[cargo]?.candidatos.find(c=>c.id===id)||null;}
+
+function exibirSpinner(texto){document.getElementById("spinnerTexto").textContent=texto||"Carregando...";document.getElementById("spinnerOverlay").classList.add("ativo");}
+function atualizarSpinner(texto){document.getElementById("spinnerTexto").textContent=texto;}
+function ocultarSpinner(){document.getElementById("spinnerOverlay").classList.remove("ativo");}
+function exibirMensagem(tipo,texto){const ids={erro:"msgErro",aviso:"msgAviso",info:"msgInfo"};const el=document.getElementById(ids[tipo]);if(!el)return;el.textContent=texto;el.className=`mensagem ${tipo}`;}
+function limparMensagens(){["msgErro","msgAviso","msgInfo"].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent="";el.className="mensagem";}});document.getElementById("corsAviso").classList.remove("visivel");}
+function esconderResultados(){document.getElementById("resultadosSecao").style.display="none";document.getElementById("governabilidadeBox").classList.remove("visivel");document.getElementById("estadoAviso").classList.remove("visivel");document.getElementById("progressoCedula").classList.remove("visivel");}
+</script>
+</body>
+</html>
